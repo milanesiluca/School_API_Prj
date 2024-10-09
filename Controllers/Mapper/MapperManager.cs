@@ -32,6 +32,9 @@ namespace API_School_own_prj.API.Models.Dtos.Mapper
 
             CreateMap<Teacher, User>();
             CreateMap<Student, User>();
+
+            CreateMap<User, InloggedUser>().ReverseMap();
+            CreateMap<InloggedUser, InloggedUserDto>().ReverseMap();
         }
     }
 }
