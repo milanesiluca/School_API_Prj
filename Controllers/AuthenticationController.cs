@@ -4,10 +4,10 @@ using API_School_own_prj.Models.Entities;
 using API_School_own_prj.ServicesManager;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace API_School_own_prj.Controllers
@@ -62,10 +62,18 @@ namespace API_School_own_prj.Controllers
 
             var tokenToReturn = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
 
+            var randomNumber = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            user.RefreshToken = Convert.ToBase64String(randomNumber);
+            user.RefreshTokenExpireTime = DateTime.UtcNow.AddDays(Convert.ToDouble(_configuration["JwtSettings:RefreshExpiringTokenDays"]));
+
             var loggedUser = _mapper.Map<InloggedUser>(user);
             loggedUser.Token = tokenToReturn;
 
             var loggedUserDto = _mapper.Map<InloggedUserDto>(loggedUser);
+
+
 
             return Ok(loggedUserDto);
         }

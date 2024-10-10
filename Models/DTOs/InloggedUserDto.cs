@@ -19,6 +19,7 @@ namespace API_School_own_prj.Models.DTOs
         [Required(ErrorMessage = "Role is required")]
         public string? Role { get; init; }
 
+        [Required] public string? RefreshToken { get; set; }
         [Required] public string? Token { get; set; }
     }
 }
